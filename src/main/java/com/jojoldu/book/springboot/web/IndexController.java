@@ -1,5 +1,6 @@
 package com.jojoldu.book.springboot.web;
 
+import com.jojoldu.book.springboot.config.auth.LoginUser;
 import com.jojoldu.book.springboot.config.auth.dto.SessionUser;
 import com.jojoldu.book.springboot.service.posts.PostsService;
 import com.jojoldu.book.springboot.web.dto.PostsResponseDto;
@@ -15,15 +16,13 @@ import javax.servlet.http.HttpSession;
 @Controller
 public class IndexController {
     private final PostsService postsService;
-    private final HttpSession httpSession;
 
     @GetMapping("/")
-    public String index(Model model) {
+    public String index(Model model, @LoginUser SessionUser user) {
 //        localhost 상위 부분 호출 시
 //        PostsService -> PostsRepository(Interface) 호출 하여 가져온다..
         model.addAttribute("posts", postsService.findAllDesc());
 
-        SessionUser user = (SessionUser) httpSession.getAttribute("user");
         if (user != null) {
             model.addAttribute("userName", user.getName());
         }
